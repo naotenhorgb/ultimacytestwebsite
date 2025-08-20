@@ -1,0 +1,224 @@
+<!--
+  File: index.html
+  Save path (suggested): C:/Users/usu/Documents/ultsite/index.html
+  Asset folders expected next to this file:
+    - image/logo.png
+    - image/banner.png (1920x300)
+    - image/game.png (small icon for Jogar)
+    - image/discord.png (icon for Discord)
+    - image/cato.png (32x32 emoji-like image)
+    - sfx/fadeout.mp3
+
+  The site uses an embedded YouTube trailer. SERVER_IP is set to ultimacy.com.br
+-->
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Servidor Minecraft — Ultimacy</title>
+  <style>
+    :root{
+      --bg-1: #171926;
+      --accent: #debf6a; /* orange */
+      --muted: rgba(255,255,255,0.12);
+      --muted-strong: rgba(255,255,255,0.22);
+      --muted-bright: rgba(255,255,255,0.9);
+      --radius: 14px;
+      --max-width: 1100px;
+      --transition: 240ms cubic-bezier(.2,.9,.3,1);
+      --server-ip: "ultimacy.com.br";
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(160deg, rgba(23,25,38,1) 0%, rgba(16,18,28,1) 100%);
+      color: #e6e8ee;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:block;
+      padding:28px 20px;
+    }
+
+    .wrap{ width:100%; max-width:var(--max-width); margin:0 auto; }
+
+    header{ display:flex; flex-direction:column; gap:12px; margin-bottom:6px; }
+    .top-area{ display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .top-left{ display:flex; align-items:center; gap:14px; }
+    .logo-center img{ height:96px; width:auto; border-radius:10px; box-shadow: 0 8px 30px rgba(116,61,230,0.06); }
+    .top-right{ display:flex; gap:12px; align-items:center; }
+
+    /* action buttons */
+    .action-btn{ display:inline-flex; align-items:center; gap:12px; background:transparent; border:none; cursor:pointer; padding:6px 10px; color:inherit; }
+    .action-icon{ display:flex; align-items:center; justify-content:center; border-radius:8px; width:52px; height:52px; flex-shrink:0; border:1px solid rgba(255,255,255,0.04); background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+    .action-icon img{ height:36px; width:auto; display:block; }
+    .action-text{ display:flex; flex-direction:column; align-items:flex-start; line-height:1; }
+    .action-text .t1{ font-weight:800; font-size:16px; color:#fff; }
+    .action-text .t2{ font-size:13px; color:var(--muted); }
+    .btn-jogar .t2{ color:#fff; }
+
+    /* nav buttons */
+    .nav-group{ display:flex; gap:12px; align-items:center; }
+    .nav-btn{ background:transparent; border:none; color:#fff; font-weight:700; padding:8px 10px; border-radius:8px; cursor:pointer; }
+    .nav-btn:hover{ background: rgba(255,255,255,0.03); }
+
+    /* top Loja fade */
+    .btn-fade{ animation: btnFade 700ms forwards ease; }
+    @keyframes btnFade{ to{ opacity:0; transform:translateY(-6px) scale(0.98); } }
+
+    /* full-bleed banner */
+    .full-bleed{ width:100vw; margin-left:calc(50% - 50vw); }
+    .banner{ position:relative; height:300px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:12px; box-shadow: 0 6px 24px rgba(0,0,0,0.6); border-radius:12px; }
+    .banner::before{ content:""; position:absolute; inset:0; background-image: url('image/banner.png'); background-size:cover; background-position:center; filter:brightness(0.36) saturate(1.05); z-index:0; }
+    .banner-inner{ z-index:1; width:100%; max-width:var(--max-width); display:flex; align-items:center; justify-content:space-between; padding: 28px 36px; }
+
+    /* trailer area - maintain 16:9, prefer 1920x1080 max */
+    .trailer-wrap{ margin-top:10px; margin-bottom:36px; }
+    .trailer-title{ text-align:center; font-weight:800; margin-bottom:10px; }
+    .trailer{ width:100%; max-width:1920px; border-radius:12px; overflow:hidden; background:#000; display:block; aspect-ratio:16/9; }
+    .trailer iframe{ width:100%; height:100%; display:block; border:0; }
+    .trailer-desc{ text-align:center; color:var(--muted-bright); margin-top:12px; display:flex; align-items:center; justify-content:center; gap:6px; }
+
+    /* footer */
+    footer{ margin-top:36px; padding:28px 0 40px 0; border-top:1px solid rgba(255,255,255,0.03); color:var(--muted-strong); display:flex; justify-content:space-between; gap:16px; align-items:center; }
+    .footer-left{ max-width:680px; }
+    .footer-left .desc{ color:var(--muted-bright); margin-bottom:8px; }
+    .footer-links{ display:flex; gap:12px; align-items:center; color:var(--muted-strong); }
+    .footer-links span, .footer-links a{ color:var(--muted-strong); text-decoration:none; font-weight:600; }
+    .socials{ display:flex; gap:12px; align-items:center; }
+    .socials a{ color:var(--muted-strong); text-decoration:none; font-weight:600; }
+
+    /* footer loja hover glow */
+    #lojaFooter { color:var(--muted-strong); text-decoration:none; font-weight:700; padding:6px 10px; border-radius:8px; }
+    #lojaFooter:hover{ box-shadow: 0 6px 26px rgba(222,191,106,0.18); color:#fff; }
+
+    /* toast for copy IP (bottom-right) */
+    .toast{ position:fixed; right:28px; bottom:28px; background: rgba(0,0,0,0.6); color:#fff; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px; opacity:0; transform:translateY(10px); transition: all 240ms ease; pointer-events:none; z-index:9999; }
+    .toast.show{ opacity:1; transform:translateY(0); }
+
+    @media (max-width:900px){ .banner-inner{ padding:18px; } .logo-center img{ height:72px; } .top-area{ flex-direction:column; align-items:stretch; gap:12px; } .trailer{ aspect-ratio:16/9; height:auto; } footer{ flex-direction:column; align-items:stretch; gap:12px; } }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="top-area">
+        <div class="top-left">
+          <!-- Jogar button (game.png) -->
+          <button id="jogarBtn" class="action-btn btn-jogar" title="Copiar IP do servidor">
+            <div class="action-icon"><img src="image/game.png" alt="Jogar" /></div>
+            <div class="action-text"><span class="t1">ultimacy.com.br</span><span class="t2">Clique para jogar.</span></div>
+          </button>
+
+          <!-- players and jornal near jogar (buttons) -->
+          <div class="nav-group">
+            <button class="nav-btn" id="playersBtn">Players</button>
+            <button class="nav-btn" id="jornalBtn">Jornal</button>
+          </div>
+        </div>
+
+        <div class="logo-center" style="text-align:center;"><img src="image/logo.png" alt="Logo do servidor" id="siteLogo" /></div>
+
+        <div class="top-right">
+          <div class="nav-group">
+            <button class="nav-btn" id="wikiBtn">Wiki</button>
+            <button class="nav-btn" id="lojaTop">Loja</button>
+          </div>
+
+          <!-- Discord button: mirrored layout (text then small image on the right) -->
+          <button id="discordBtn" class="action-btn btn-discord" title="Abrir Discord">
+            <div class="action-text" style="align-items:flex-end;">
+              <span class="t1">Discord <img src="image/discord.png" alt="" style="width:20px;height:20px;vertical-align:middle;margin-left:8px;"/></span>
+              <span class="t2" style="color:#fff;">Comunidade • Abra o Discord</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <!-- Full width banner -->
+  <section class="full-bleed">
+    <div class="banner" role="region" aria-label="Banner principal">
+      <div class="banner-inner"><div style="width:120px"></div><div style="flex:1"></div><div style="width:120px"></div></div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <main>
+      <section style="flex:1">
+        <div class="trailer-wrap">
+          <div class="trailer-title">Trailer</div>
+          <div class="trailer" aria-label="Trailer do servidor">
+            <iframe src="https://www.youtube.com/embed/r96vvPS-q_4" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="trailer-desc">Para mais updates e mais <img src="image/cato.png" alt="cato" style="width:32px;height:32px;vertical-align:middle;"> siga-nos nas redes sociais</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-left">
+        <div class="desc">Um servidor survival experimental focado em criar uma experiência nova e desafiadora e ao mesmo tempo acolhedora.</div>
+        <div class="footer-links"><a href="#">Termos</a><span>© 2025 — Ultimacy</span></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;">
+        <div class="socials"><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">YouTube</a></div>
+        <div><a id="lojaFooter" href="#">Loja</a></div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast">IP copiado: <span id="ipOut"></span></div>
+
+  <audio id="fadeAudio" src="sfx/fadeout.mp3" preload="auto"></audio>
+
+  <script>
+    (function(){
+      const SERVER_IP = 'ultimacy.com.br';
+      const jogarBtn = document.getElementById('jogarBtn');
+      const discordBtn = document.getElementById('discordBtn');
+      const toast = document.getElementById('toast');
+      const ipOut = document.getElementById('ipOut');
+      const wikiBtn = document.getElementById('wikiBtn');
+      const lojaTop = document.getElementById('lojaTop');
+      const lojaFooter = document.getElementById('lojaFooter');
+      const fadeAudio = document.getElementById('fadeAudio');
+
+      // Jogar: copy IP
+      jogarBtn.addEventListener('click', async function(){
+        try{
+          if(navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(SERVER_IP); }
+          else { const ta = document.createElement('textarea'); ta.value = SERVER_IP; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+          ipOut.textContent = SERVER_IP;
+          toast.classList.add('show');
+          setTimeout(()=> toast.classList.remove('show'), 2200);
+        }catch(e){ alert('Não foi possível copiar o IP automaticamente. Use: ' + SERVER_IP); }
+      });
+
+      // Wiki: open discord as placeholder
+      wikiBtn.addEventListener('click', function(e){ e.preventDefault(); window.open('https://discord.gg/hYMmPKmY', '_blank', 'noopener'); });
+
+      // Loja top: fade out the top Loja button only, play audio 1s after fade begins
+      lojaTop.addEventListener('click', function(e){ e.preventDefault(); lojaTop.classList.add('btn-fade'); setTimeout(()=>{ try{ fadeAudio.currentTime = 0; fadeAudio.play().catch(()=>{}); }catch(e){} }, 1000); setTimeout(()=>{ lojaTop.style.display = 'none'; }, 900); });
+
+      // Loja footer: open placeholder alert but styled differently on hover
+      lojaFooter.addEventListener('click', function(e){ e.preventDefault(); alert('Loja (demo) — funcionalidade futura.'); });
+
+      // Discord open
+      discordBtn.addEventListener('click', function(){ window.open('https://discord.gg/hYMmPKmY', '_blank', 'noopener'); });
+
+      // keyboard accessibility
+      [jogarBtn, discordBtn, lojaTop].forEach(el => { if(el){ el.tabIndex = 0; el.addEventListener('keydown', (ev)=>{ if(ev.key === 'Enter') el.click(); }); }});
+
+      // expose for debugging
+      window.__SITE = { SERVER_IP };
+    })();
+  </script>
+</body>
+</html>
